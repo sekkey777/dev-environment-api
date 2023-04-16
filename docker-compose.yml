@@ -1,5 +1,16 @@
 version: '3'
+
 services:
+  frontend:
+    build:
+      context: ./frontend/
+      dockerfile: Dockerfile
+    volumes:
+      - ./frontend:/usr/src/app
+    command: sh -c "cd app && npm start"
+    ports:
+      - "3000:3000"
+
   backend:
     build:
       context: ./backend/
@@ -16,6 +27,7 @@ services:
       TZ: Asia/Tokyo
     stdin_open: true
     tty: true
+
   db:
     image: mysql:8.0
     environment:
@@ -26,6 +38,7 @@ services:
     command: --default-authentication-plugin=mysql_native_password
     volumes:
       - db:/var/lib/mysql
+
   phpmyadmin:
     image: phpmyadmin:latest
     environment:
@@ -37,6 +50,7 @@ services:
       - 4040:80
     depends_on:
       - db
+
 volumes:
   db:
     driver: local
